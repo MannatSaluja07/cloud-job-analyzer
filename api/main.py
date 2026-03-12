@@ -43,3 +43,30 @@ def skills():
                 result[skill] += 1
 
     return result
+
+
+@app.get("/top-skills")
+def top_skills():
+    jobs = list_jobs(limit=100)
+
+    skills_list = [
+        "AWS",
+        "Docker",
+        "Terraform",
+        "Kubernetes",
+        "Python",
+        "Linux"
+    ]
+
+    result = {skill: 0 for skill in skills_list}
+
+    for job in jobs:
+        text = job["title"].lower()
+
+        for skill in skills_list:
+            if skill.lower() in text:
+                result[skill] += 1
+
+    sorted_skills = sorted(result.items(), key=lambda x: x[1], reverse=True)
+
+    return {"top_skills": sorted_skills}
